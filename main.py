@@ -1,21 +1,12 @@
-import telebot
+from flask import Flask
 import os
-import time
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
+app = Flask(__name__)
 
-@bot.message_handler(commands=['start'])
-def welcome(message):
-    bot.reply_to(message, "Привет! Я супербот. Скоро буду присылать сигналы 📈")
-
-def main():
-    while True:
-        try:
-            bot.polling(none_stop=True)
-        except Exception as e:
-            print("Ошибка:", e)
-            time.sleep(5)
+@app.route('/')
+def home():
+    return "Супербот работает! ✅"
 
 if __name__ == '__main__':
-    main()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
