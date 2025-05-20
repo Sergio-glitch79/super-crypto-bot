@@ -1,22 +1,22 @@
-import os
 from telegram.ext import Updater
-from dotenv import load_dotenv
 from bot.handlers import register_handlers
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 def main():
-    load_dotenv()
-    token = os.getenv("TELEGRAM_BOT_TOKEN")
-    if not token:
-        raise ValueError("❌ Не указан TELEGRAM_BOT_TOKEN в переменных окружения.")
+    updater = Updater(token=TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
 
-    updater = Updater(token, use_context=True)
-    dp = updater.dispatcher
+    register_handlers(dispatcher)
 
-    register_handlers(dp)
+    print("Привет! Я супербот для крипты. Готов к работе!")
 
-    print("✅ Бот запущен.")
     updater.start_polling()
     updater.idle()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
