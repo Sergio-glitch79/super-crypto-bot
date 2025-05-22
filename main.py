@@ -1,29 +1,32 @@
 from flask import Flask, request
-from telegram import Bot, Update
-from telegram.ext import Dispatcher, CommandHandler
-import os
-
-TOKEN = '7049684701:AAFoGlDQKQBPg1Tw9Xa3p2btw5IHgCPM8Qg'
-bot = Bot(token=TOKEN)
+import telegram
 
 app = Flask(__name__)
 
+# Замените на свой токен
+TOKEN = '7049684701:AAFoGlDQKQBPg1Tw9Xa3p2btw5IHgCPM8Qg'
+bot = telegram.Bot(token=TOKEN)
+
 @app.route('/')
-def index():
-    return 'Супербот работает!'
+def home():
+    return 'Бот работает!'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    update = Update.de_json(request.get_json(force=True), bot)
-    dispatcher.process_update(update)
-    return 'OK'
+    data = request.get_json()
+    if 'message' in data:
+        chat_id = data['message']['chat']['id']
+        text = data['message'].get('text', '')
 
-def start(update, context):
-    update.message.reply_text('Привет! Я супербот!')
-
-# Подключаем диспетчер
-dispatcher = Dispatcher(bot, None, use_context=True)
-dispatcher.add_handler(CommandHandler('start', start))
+        if text == '/start':
+            bot.send_message(chat_id=chat_id, text="👋 Привет! Я бот для сигналов.")
+        elif text == '/help':
+            bot.send_message(chat_id=chat_id, text="📌 Команды:\n/start — Запуск\n/help — Помощь\n/status — Статус бота")
+        elif text == '/status':
+            bot.send_message(chat_id=chat_id, text="✅ Бот активен и работает.")
+        else:
+            bot.send_message(chat_id=chat_id, text="🤖 Я не понимаю эту команду. Введите /help.")
+    return 'ok', 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
