@@ -54,11 +54,11 @@ def auto_signal():
 
 # Команда /start
 
-def start(update, context):print(f"Chat ID: {update.effective_chat.id}")
+def start(update, context):
 
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="👋 Привет! Я Crypto Signal Advisor. Сигналы по сильным движениям криптовалют приходят каждые 10 минут. Введи /help для помощи.")
-
+print(f"🔎 CHAT_ID = {update.effective_chat.id}")
 # Команда /help
 
 def help_command(update, context):
